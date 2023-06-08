@@ -39,7 +39,7 @@ struct MyApp : TopWindow {
 		case K_SHIFT|K_ALT|K_LEFT:  stack.Prev(); break;
 		case K_SHIFT|K_ALT|K_RIGHT: stack.Next(); break;
 		case K_SHIFT|K_ALT|K_HOME:  stack.GoBegin(); break;
-		case K_SHIFT|K_ALT|K_END:   stack.GoEnd();
+		case K_SHIFT|K_ALT|K_END:   stack.GoEnd(); break;
 		default: return Ctrl::Key(key, count);
 		}
 		return true;
