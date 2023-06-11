@@ -14,3 +14,7 @@ A simple widget stacking container for U++ that displays only one ctrl at a time
 |:---                |:---                                                                               |
 | StackCtrlExample  | Demonstrates basic capabilities of StackCtrl.    |
 
+
+## Screenshot
+
+![StackCtrl reference example](https://shorturl.at/jvAT6)
