@@ -12,7 +12,7 @@ struct MyApp : WithMainLayout<TopWindow> {
 	ArrayCtrl list;
 	MyApp()
 	{
-		CtrlLayout(*this, "StackCtrl example");
+		CtrlLayout(*this, "StackCtrl Example");
 		Sizeable().Zoomable().CenterScreen();
 
 		list.AddColumn("Numbers");
