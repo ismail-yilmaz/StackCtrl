@@ -68,7 +68,6 @@ void StackCtrl::Next()
 void StackCtrl::Activate(Ctrl *ctrl)
 {
 	GuiLock __;
-	// TODO: Implement transition animation.
 	
 	if(!activectrl)
 		activectrl = ctrl;
