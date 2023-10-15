@@ -96,6 +96,12 @@ mode. This can be avoided by clamping the indices between 0 and
 GetCount() `- 1.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:StackCtrl`:`:GetActiveCtrl`(`)const: Ctrl[@(0.0.255) `* 
+][* GetActiveCtrl]() [@(0.0.255) const]&]
+[s2;%% Returns a pointer to active (shown) ctrl. Returns nullptr 
+on failure. .&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:StackCtrl`:`:Find`(Upp`:`:Ctrl`&`)const: [@(0.0.255) int] 
 [* Find](Ctrl[@(0.0.255) `&] [*@3 ctrl]) [@(0.0.255) const]&]
 [s2;%% Returns the index of [%-*@3 ctrl] in the stack, or `-1 if the 
