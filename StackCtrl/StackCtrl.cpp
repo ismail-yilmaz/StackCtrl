@@ -1,5 +1,8 @@
 #include "StackCtrl.h"
 
+#define LLOG(x)  // RLOG("StackCtrl [#" << this << "]: " x)
+#define LDUMP(x) // RDUMP(x)
+
 namespace Upp {
 
 StackCtrl::StackCtrl()
@@ -13,11 +16,13 @@ StackCtrl::StackCtrl()
 
 StackCtrl& StackCtrl::Add(Ctrl& ctrl)
 {
+	LLOG("Add(" << &ctrl << ")");
 	return Insert(GetCount(), ctrl);
 }
 
 StackCtrl& StackCtrl::Insert(int i, Ctrl& ctrl)
 {
+	LLOG("Insert(" << i << ", " << &ctrl << ")");
 	if(ctrl.InFrame())
 		Ctrl::Add(ctrl);
 	else {
@@ -31,19 +36,23 @@ StackCtrl& StackCtrl::Insert(int i, Ctrl& ctrl)
 
 void StackCtrl::Remove(Ctrl& ctrl)
 {
+	LLOG("Remove(" << &ctrl << ")");
+
 	int i = list.Find(&ctrl);
 	if(i < 0)
 		return;
 	if(i > 0)
-		Prev();
+		Goto(i - 1);
 	else
-		Next();
+		Goto(i + 1);
 	list.RemoveKey(&ctrl);
 	ctrl.Remove();
 }
 
 void StackCtrl::Prev()
 {
+	LLOG("Prev(" << activectrl <<")");
+
 	int i = list.Find(activectrl);
 	if(i < 0)
 		return;
@@ -56,6 +65,8 @@ void StackCtrl::Prev()
 
 void StackCtrl::Next()
 {
+	LLOG("Next()");
+	
 	int i = list.Find(activectrl);
 	if(i < 0)
 		return;
@@ -69,7 +80,9 @@ void StackCtrl::Next()
 void StackCtrl::Activate(Ctrl *ctrl)
 {
 	GuiLock __;
-	
+
+	LLOG("Activate(" << ctrl << ")");
+
 	if(!activectrl)
 		activectrl = ctrl;
 	
@@ -115,6 +128,8 @@ void StackCtrl::Animate(Ctrl *nextctrl)
 {
 	if(animating)
 		return;
+	
+	LLOG("Animate(" << nextctrl << ")");
 	
 	animating = true;
 	
@@ -209,6 +224,8 @@ void StackCtrl::Animate(Ctrl *nextctrl)
 
 void StackCtrl::Serialize(Stream& s)
 {
+	LLOG("Serialize()");
+	
 	s % wheel % vertical % duration;
 }
 
