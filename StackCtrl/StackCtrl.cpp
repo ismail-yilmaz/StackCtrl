@@ -213,7 +213,8 @@ void StackCtrl::Animate(Ctrl *nextctrl)
 		nextctrl->Sync();
 		activectrl->Sync();
 		#endif
-		Ctrl::ProcessEvents();
+		if(IsMainThread())
+			Ctrl::ProcessEvents();
 		Sleep(0);
 	}
 	activectrl->SizePos();
