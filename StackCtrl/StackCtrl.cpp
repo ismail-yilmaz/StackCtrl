@@ -79,16 +79,19 @@ void StackCtrl::Next()
 
 void StackCtrl::Activate(Ctrl *ctrl)
 {
-	GuiLock __;
-
 	LLOG("Activate(" << ctrl << ")");
-
+	
+	if(!ctrl)
+		return;
+	
 	if(!activectrl)
 		activectrl = ctrl;
-	
-	if(ctrl != activectrl) {
+
+	GuiLock __;
+
+	if(activectrl != ctrl) {
 		if(duration >= 100)
-			Animate(ctrl);
+			Animate(ctrl, IsNext(ctrl));
 		activectrl->Hide();
 		activectrl = ctrl;
 	}
@@ -98,129 +101,68 @@ void StackCtrl::Activate(Ctrl *ctrl)
 	WhenAction();
 }
 
-bool StackCtrl::ScrollCtrl(enum Direction d, Ctrl& ctrl, Rect r, Rect target, int time)
+bool StackCtrl::IsNext(Ctrl *nextctrl) const
 {
-	switch(d) {
-	case Direction::Left:
-		r.left  -= ((r.left - target.left) * time) / duration;
-		r.right -= ((r.right - target.right) * time) / duration;
-		break;
-	case Direction::Right:
-		r.left  += ((target.left - r.left) * time) / duration;
-		r.right += ((target.right - r.right) * time) / duration;
-		break;
-	case Direction::Up:
-		r.top    -= ((r.top - target.top) * time) / duration;
-		r.bottom -= ((r.bottom - target.bottom) * time) / duration;
-		break;
-	case Direction::Down:
-		r.top    += ((target.top - r.top) * time) / duration;
-		r.bottom += ((target.bottom - r.bottom) * time) / duration;
-		break;
-	default:
-		return true;
-	}
-	ctrl.SetRect(r);
-	return r == target;
+    // Handle cyclic navigation
+	int curr  = list.Find(activectrl);
+    int next  = list.Find(nextctrl);
+    int total = list.GetCount();
+    return (curr < next) || (total > 2 && curr == total - 1 && next == 0);
 }
 
-void StackCtrl::Animate(Ctrl *nextctrl)
+void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 {
 	if(animating)
 		return;
-	
+
 	LLOG("Animate(" << nextctrl << ")");
-	
+
 	animating = true;
 	
-	int a = list.Find(activectrl);
-	int b = list.Find(nextctrl);
+    Rect view = GetView();
+    Size size = view.GetSize();
+    
+    // Prepare source and destination rectangles
+    Rect rsrc1 = view;
+    Rect rdst1 = view;
+    Rect rsrc2 = view;
+    Rect rdst2 = view;
 
-	if(a == b) {
-		animating = false;
-		return;
-	}
-	
-	Direction direction;
-	Rect r = GetView(), rsrc1 = r, rdst1 = r, rsrc2 = r, rdst2 = r;
-	Size sz = r.GetSize();
-	
-	auto SetUpLeft = [&, this]()
-	{
-		direction = vertical ? Direction::Up : Direction::Left;
-		switch(direction) {
-		case Direction::Up:
-			rdst1.OffsetVert(sz.cx);
-			rsrc2.OffsetVert(-sz.cx);
-			break;
-		case Direction::Left:
-			rdst1.OffsetHorz(sz.cx);
-			rsrc2.OffsetHorz(-sz.cx);
-			break;
-		default:
-			NEVER();
-		}
-	};
+    // Offset rectangles based on animation direction
+    if(vertical) {
+        rdst1.OffsetVert(forward ? -size.cy :  size.cy);
+        rsrc2.OffsetVert(forward ?  size.cy : -size.cy);
+    }
+    else {
+        rdst1.OffsetHorz(forward ? -size.cx :  size.cx);
+        rsrc2.OffsetHorz(forward ?  size.cx : -size.cx);
+    }
 
-	auto SetDownRight = [&, this]()
-	{
-		direction = vertical ? Direction::Down : Direction::Right;
-		switch(direction) {
-		case Direction::Down:
-			rdst1.OffsetVert(-sz.cx);
-			rsrc2.OffsetVert(sz.cx);
-			break;
-		case Direction::Right:
-			rdst1.OffsetHorz(-sz.cx);
-			rsrc2.OffsetHorz(sz.cx);
-			break;
-		default:
-			NEVER();
-		}
-	};
-	
-	int n = GetCount();
-	
-	if(n > 2 && a == n - 1 && b == 0)
-		SetDownRight();
-	else
-	if(n > 2 && a == 0 && b == n - 1)
-		SetUpLeft();
-	else
-	if(a > b)
-		SetUpLeft();
-	else
-	if(a < b)
-		SetDownRight();
+    // Prepare new control
+    nextctrl->SetRect(rsrc2);
+    nextctrl->Show();
 
-	nextctrl->SetRect(rsrc1);
-	nextctrl->Show();
-
-	dword start_time = msecs();
-	for(;;) {
-		int t = int(msecs() - start_time);
-		if(t > duration)
+    // Animation loop
+    for(int start = msecs();;) {
+		int elapsed = msecs(start);
+		if(elapsed > duration)
 			break;
-		bool done1 = ScrollCtrl(direction, *activectrl, rsrc1, rdst1, t);
-		bool done2 = ScrollCtrl(direction, *nextctrl,   rsrc2, rdst2, t);
-		if(done1 || done2)
-			break;
-		#ifdef PLATFORM_WIN32
-		// For some reason, Sync doesn't work as expected on Win32...
-		nextctrl->Refresh();
-		activectrl->Refresh();
-		#else
-		nextctrl->Sync();
-		activectrl->Sync();
-		#endif
-		if(IsMainThread())
-			Ctrl::ProcessEvents();
-		Sleep(0);
-	}
-	activectrl->SizePos();
-	nextctrl->SizePos();
-	
-	animating = false;
+		Rect r1 = rsrc1, r2 = rsrc2;
+		r1 += (rdst1 - rsrc1) * elapsed / duration; // Lerp
+		r2 += (rdst2 - rsrc2) * elapsed / duration; // Lerp
+		activectrl->SetRect(r1);
+		nextctrl->SetRect(r2);
+        activectrl->Refresh();
+        nextctrl->Refresh();
+        if(IsMainThread())
+            Ctrl::ProcessEvents();
+        Sleep(0);
+    }
+    
+    activectrl->SizePos();
+    nextctrl->SizePos();
+    
+    animating = false;
 }
 
 void StackCtrl::Serialize(Stream& s)

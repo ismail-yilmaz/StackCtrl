@@ -25,8 +25,8 @@ public:
     Ctrl&       Get(int i)              { ASSERT(i >= 0 && i < GetCount()); return *list[i]; }
     Ctrl&       operator[](int i)       { return Get(i); }
 
-	Ctrl*       GetActiveCtrl() const   { return list.Find(activectrl) >= 0 ? activectrl : nullptr; }
-		
+    Ctrl*       GetActiveCtrl() const   { return list.Find(activectrl) >= 0 ? activectrl : nullptr; }
+        
     int         Find(Ctrl& ctrl) const  { return list.Find(&ctrl); }
 
     void        Goto(int i)             { if(i >= 0 && i < GetCount()) Activate(list[i]); }
@@ -36,15 +36,14 @@ public:
     void        GoBegin()               { Goto(0); }
     void        GoEnd()                 { Goto(GetCount() - 1); }
 
-	void		Serialize(Stream& s) override;
-	
+    void        Serialize(Stream& s) override;
+    
 private:
     void        Activate(Ctrl* ctrl);
 
     // Animation related stuff.
-    enum class Direction { Left, Right, Up, Down };
-    bool ScrollCtrl(Direction direction, Ctrl& ctrl, Rect r, Rect target, int time);
-    void Animate(Ctrl *next);
+    bool IsNext(Ctrl *next) const;
+    void Animate(Ctrl *next, bool forward);
 
     Index<Ctrl*> list;
     Ctrl*        activectrl;    // cursor
