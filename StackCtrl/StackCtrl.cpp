@@ -103,11 +103,11 @@ void StackCtrl::Activate(Ctrl *ctrl)
 
 bool StackCtrl::IsNext(Ctrl *nextctrl) const
 {
-    // Handle cyclic navigation
+	// Handle cyclic navigation
 	int curr  = list.Find(activectrl);
-    int next  = list.Find(nextctrl);
-    int total = list.GetCount();
-    return (curr < next) || (total > 2 && curr == total - 1 && next == 0);
+	int next  = list.Find(nextctrl);
+	int total = list.GetCount();
+	return (curr < next) || (total > 2 && curr == total - 1 && next == 0);
 }
 
 void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
@@ -119,31 +119,31 @@ void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 
 	animating = true;
 	
-    Rect view = GetView();
-    Size size = view.GetSize();
-    
-    // Prepare source and destination rectangles
-    Rect rsrc1 = view;
-    Rect rdst1 = view;
-    Rect rsrc2 = view;
-    Rect rdst2 = view;
+	Rect view = GetView();
+	Size size = view.GetSize();
+	
+	// Prepare source and destination rectangles
+	Rect rsrc1 = view;
+	Rect rdst1 = view;
+	Rect rsrc2 = view;
+	Rect rdst2 = view;
 
-    // Offset rectangles based on animation direction
-    if(vertical) {
-        rdst1.OffsetVert(forward ? -size.cy :  size.cy);
-        rsrc2.OffsetVert(forward ?  size.cy : -size.cy);
-    }
-    else {
-        rdst1.OffsetHorz(forward ? -size.cx :  size.cx);
-        rsrc2.OffsetHorz(forward ?  size.cx : -size.cx);
-    }
+	// Offset rectangles based on animation direction
+	if(vertical) {
+		rdst1.OffsetVert(forward ? -size.cy :  size.cy);
+		rsrc2.OffsetVert(forward ?  size.cy : -size.cy);
+	}
+	else {
+		rdst1.OffsetHorz(forward ? -size.cx :  size.cx);
+		rsrc2.OffsetHorz(forward ?  size.cx : -size.cx);
+	}
 
-    // Prepare new control
-    nextctrl->SetRect(rsrc2);
-    nextctrl->Show();
+	// Prepare new control
+	nextctrl->SetRect(rsrc2);
+	nextctrl->Show();
 
-    // Animation loop
-    for(int start = msecs();;) {
+	// Animation loop
+	for(int start = msecs();;) {
 		int elapsed = msecs(start);
 		if(elapsed > duration)
 			break;
@@ -152,17 +152,17 @@ void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 		r2 += (rdst2 - rsrc2) * elapsed / duration; // Lerp
 		activectrl->SetRect(r1);
 		nextctrl->SetRect(r2);
-        activectrl->Refresh();
-        nextctrl->Refresh();
-        if(IsMainThread())
-            Ctrl::ProcessEvents();
-        Sleep(0);
-    }
-    
-    activectrl->SizePos();
-    nextctrl->SizePos();
-    
-    animating = false;
+		activectrl->Refresh();
+		nextctrl->Refresh();
+		if(IsMainThread())
+			Ctrl::ProcessEvents();
+		Sleep(0);
+	}
+	
+	activectrl->SizePos();
+	nextctrl->SizePos();
+	
+	animating = false;
 }
 
 void StackCtrl::Serialize(Stream& s)
