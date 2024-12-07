@@ -152,11 +152,17 @@ void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 		r2 += (rdst2 - rsrc2) * elapsed / duration; // Lerp
 		activectrl->SetRect(r1);
 		nextctrl->SetRect(r2);
+#ifdef PLATFORM_POSIX
+		activectrl->Sync();
+		nextctrl->Sync();
+#else
 		activectrl->Refresh();
 		nextctrl->Refresh();
-		if(IsMainThread())
+#endif
+		if(IsMainThread()) {
 			Ctrl::ProcessEvents();
-		Sleep(0);
+			GuiSleep(0);
+		}
 	}
 	
 	activectrl->SizePos();
