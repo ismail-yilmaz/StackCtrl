@@ -108,6 +108,29 @@ on failure. .&]
 ctrl is not in the stack.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:StackCtrl`:`:Swap`(int`,int`): [@(0.0.255) void] [* Swap]([@(0.0.255) int] 
+[*@3 a], [@(0.0.255) int] [*@3 b])&]
+[s2;%% Swaps the positions of two stacked ctrls.  [%-*@3 a] designates 
+the index of the first ctrl, and [%-*@3 b ]designates the index 
+of the second ctrl. Does nothing when the given indices are out 
+of range.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:StackCtrl`:`:Swap`(Ctrl`&`,Ctrl`&`): [@(0.0.255) void] 
+[* Swap](Ctrl[@(0.0.255) `&] [*@3 a], Ctrl[@(0.0.255) `&] [*@3 b])&]
+[s2;%% Swaps the position of the stacked ctrl [%-*@3 a] with ctrl [%-*@3 b].&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:StackCtrl`:`:SwapNext`(`): [@(0.0.255) void] [* SwapNext]()&]
+[s2;%% Swaps the position of active ctrl with the next one`'s. Does 
+nothing if the active ctrl is at the end of the list.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:StackCtrl`:`:SwapPrev`(`): [@(0.0.255) void] [* SwapPrev]()&]
+[s2;%% Swaps the position of active ctrl with the previous one`'s. 
+Does nothing if the active ctrl is at the end of the list.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:StackCtrl`:`:Goto`(int`): [@(0.0.255) void] [* Goto]([@(0.0.255) int] 
 [*@3 i])&]
 [s2;%% Shows and activates the stacked ctrl at index [%-*@3 i], if 

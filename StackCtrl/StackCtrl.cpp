@@ -38,22 +38,29 @@ void StackCtrl::Remove(Ctrl& ctrl)
 {
 	LLOG("Remove(" << &ctrl << ")");
 
-	int i = list.Find(&ctrl);
+	int i = Find(ctrl);
 	if(i < 0)
 		return;
 	if(i > 0)
 		Goto(i - 1);
 	else
 		Goto(i + 1);
-	list.RemoveKey(&ctrl);
+	list.Remove(i);
 	ctrl.Remove();
+}
+
+void StackCtrl::Swap(int a, int b)
+{
+	if(a != b && a >= 0 && a < list.GetCount() && b >= 0 && b < list.GetCount()) {
+		list.Swap(a, b);
+	}
 }
 
 void StackCtrl::Prev()
 {
 	LLOG("Prev(" << activectrl <<")");
 
-	int i = list.Find(activectrl);
+	int i = FindIndex(list, activectrl);
 	if(i < 0)
 		return;
 	if(i > 0)
@@ -67,7 +74,7 @@ void StackCtrl::Next()
 {
 	LLOG("Next()");
 	
-	int i = list.Find(activectrl);
+	int i = FindIndex(list, activectrl);
 	if(i < 0)
 		return;
 	if(i < GetCount() - 1)
@@ -104,8 +111,8 @@ void StackCtrl::Activate(Ctrl *ctrl)
 bool StackCtrl::IsNext(Ctrl *nextctrl) const
 {
 	// Handle cyclic navigation
-	int curr  = list.Find(activectrl);
-	int next  = list.Find(nextctrl);
+	int curr  = FindIndex(list, activectrl);
+	int next  = FindIndex(list, nextctrl);
 	int total = list.GetCount();
 	return (curr < next) || (total > 2 && curr == total - 1 && next == 0);
 }
