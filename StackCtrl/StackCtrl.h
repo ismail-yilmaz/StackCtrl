@@ -19,6 +19,9 @@ public:
     StackCtrl&  Insert(int i, Ctrl& ctrl);
     void        Remove(Ctrl& ctrl);
     void        Remove(int i)           { if(i >= 0 && i < GetCount()) Remove(*list[i]); }
+    
+    Event<int, Ctrl&> WhenInsert;
+    Event<int, Ctrl&> WhenRemove;
 
     int         GetCount() const        { return list.GetCount(); }
     int         GetCursor() const       { return FindIndex(list, activectrl);  }

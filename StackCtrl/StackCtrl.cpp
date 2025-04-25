@@ -29,6 +29,7 @@ StackCtrl& StackCtrl::Insert(int i, Ctrl& ctrl)
 		ctrl.Hide();
 		Ctrl::Add(ctrl.SizePos());
 		list.Insert(i, &ctrl);
+		WhenInsert(i, ctrl);
 		Activate(&ctrl);
 	}
 	return *this;
@@ -45,6 +46,7 @@ void StackCtrl::Remove(Ctrl& ctrl)
 		Goto(i - 1);
 	else
 		Goto(i + 1);
+	WhenRemove(i, ctrl);
 	list.Remove(i);
 	ctrl.Remove();
 }
