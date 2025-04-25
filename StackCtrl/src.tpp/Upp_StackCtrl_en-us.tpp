@@ -28,6 +28,19 @@ one ctrl is visible at a time.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
+[s5;:Upp`:`:StackCtrl`:`:WhenInsert: Event<[@(0.0.255) int], Ctrl[@(0.0.255) `&]> 
+[* WhenInsert]&]
+[s2;%% Dispatched when a ctrl is added or inserted to the stack. 
+Passes the index and reference of the stacked ctrl.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:StackCtrl`:`:WhenRemove: Event<[@(0.0.255) int], Ctrl[@(0.0.255) `&]> 
+[* WhenRemove]&]
+[s2;%% Dispatched just before a ctrl is removed from the stack. Passes 
+the index and reference of the removed ctrl. Note that the index 
+is still valid at this point.&]
+[s3; &]
+[s3; &]
 [s5;:Upp`:`:StackCtrl`:`:Wheel`(bool`): StackCtrl[@(0.0.255) `&] [* Wheel]([@(0.0.255) bool
 ] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% Enables or disables circular navigation between stacked ctrls.&]
@@ -72,19 +85,6 @@ activates it. Returns `*this for method chaining.&]
 [s5;:Upp`:`:StackCtrl`:`:Remove`(int`): [@(0.0.255) void] [* Remove]([@(0.0.255) int] 
 [*@3 i])&]
 [s2;%% Remove the ctrl at index [%-*@3 i] from the stack.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:StackCtrl`:`:WhenInsert: Event<[@(0.0.255) int], Ctrl[@(0.0.255) `&]> 
-[* WhenInsert]&]
-[s2;%% Dispatched when a ctrl is added or inserted to the stack. 
-Passes the index and reference of the stacked ctrl.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:StackCtrl`:`:WhenRemove: Event<[@(0.0.255) int], Ctrl[@(0.0.255) `&]> 
-[* WhenRemove]&]
-[s2;%% Dispatched just before a ctrl is removed from the stack. Passes 
-the index and reference of the removed ctrl. Note that the index 
-is still valid at this point.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:StackCtrl`:`:GetCount`(`)const: [@(0.0.255) int] [* GetCount]() 
