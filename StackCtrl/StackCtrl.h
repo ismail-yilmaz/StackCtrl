@@ -11,7 +11,10 @@ public:
     virtual ~StackCtrl() {}
 
     StackCtrl&  Wheel(bool b = true)          { wheel = b; return *this; }
+
     StackCtrl&  Animation(int ms = 150)       { duration = clamp(ms, 0, 1000); return *this; }
+    int         GetDuration() const           { return duration; }
+
     StackCtrl&  Horz()                        { vertical = false; return *this; }
     StackCtrl&  Vert()                        { vertical = true;  return *this; }
 

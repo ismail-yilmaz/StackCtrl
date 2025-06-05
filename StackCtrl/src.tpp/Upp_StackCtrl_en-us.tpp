@@ -55,6 +55,12 @@ the duration anything below 100 ms effectively disables the animation.
 Returns `*this for method chaining.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:StackCtrl`:`:GetDuration`(`)const: [@(0.0.255) int] [* GetDuration]() 
+[@(0.0.255) const]&]
+[s2;%% Returns the animation duration in miliseconds. Note that any 
+value below 100 ms means that the animation is disabled.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:StackCtrl`:`:Horz`(`): StackCtrl[@(0.0.255) `&] [* Horz]()&]
 [s2;%% Sets the orientation of ctrl transition animation to horizontal. 
 Returns `*this for method chaining.&]
