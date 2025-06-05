@@ -6,6 +6,8 @@ uses
 file
 	StackCtrl.h,
 	StackCtrl.cpp,
+	Meta readonly separator,
+	StackCtrl.usc,
 	Docs readonly separator,
 	src.tpp,
 	Info readonly separator,

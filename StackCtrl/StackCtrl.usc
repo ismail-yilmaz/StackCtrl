@@ -1,0 +1,17 @@
+ctrl StackCtrl {
+	group "Special";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	bool   Wheel = false;
+	int    Animation = 150;
+	Frame  SetFrame @0;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		DrawBorder(w, r, :SGray, :SGray);
+		DrawClassName(w, r, "StackCtrl");
+	}
+};
