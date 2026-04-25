@@ -133,7 +133,6 @@ void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 	Size size = view.GetSize();
 	
 	// Prepare source and destination rectangles
-	Rect rsrc1 = view;
 	Rect rdst1 = view;
 	Rect rsrc2 = view;
 	Rect rdst2 = view;
