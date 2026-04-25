@@ -104,7 +104,6 @@ void StackCtrl::Activate(Ctrl *ctrl)
 		activectrl->Hide();
 		activectrl = ctrl;
 	}
-
 	activectrl->Show();
 	activectrl->SetFocus();
 	WhenAction();
@@ -112,6 +111,8 @@ void StackCtrl::Activate(Ctrl *ctrl)
 
 bool StackCtrl::IsNext(Ctrl *nextctrl) const
 {
+	LLOG("IsNext()");
+	
 	// Handle cyclic navigation
 	int curr  = FindIndex(list, activectrl);
 	int next  = FindIndex(list, nextctrl);
@@ -151,29 +152,9 @@ void StackCtrl::Animate(Ctrl *nextctrl, bool forward)
 	nextctrl->SetRect(rsrc2);
 	nextctrl->Show();
 
-	// Animation loop
-	for(int start = msecs();;) {
-		int elapsed = msecs(start);
-		if(elapsed > duration)
-			break;
-		Rect r1 = rsrc1, r2 = rsrc2;
-		r1 += (rdst1 - rsrc1) * elapsed / duration; // Lerp
-		r2 += (rdst2 - rsrc2) * elapsed / duration; // Lerp
-		activectrl->SetRect(r1);
-		nextctrl->SetRect(r2);
-#ifdef PLATFORM_POSIX
-		activectrl->Sync();
-		nextctrl->Sync();
-#else
-		activectrl->Refresh();
-		nextctrl->Refresh();
-#endif
-		if(IsMainThread()) {
-			Ctrl::ProcessEvents();
-			GuiSleep(0);
-		}
-	}
-	
+	Vector<Ptr<Ctrl>> ctrls = { activectrl, nextctrl };
+	Upp::Animate(ctrls, { rdst1, rdst2 }, duration);
+
 	activectrl->SizePos();
 	nextctrl->SizePos();
 	
